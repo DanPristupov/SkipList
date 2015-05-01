@@ -10,8 +10,15 @@
         {
             Neighbour = new Collection<SkipListNode<TKey, TValue>>();
         }
+
+        public SkipListNode(TKey key, TValue value, int level)
+            :this()
+        {
+            Key = key;
+            Value = value;
+        }
+
         public int Height { get; set; }
-        public SkipListNode<TKey, TValue> Next { get; set; }
 
         public TKey Key { get; set; }
         public TValue Value { get; set; }
