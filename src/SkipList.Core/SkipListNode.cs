@@ -9,11 +9,8 @@
         {
             Key = key;
             Value = value;
-            Height = level;
             Neighbour = new SkipListNode<TKey, TValue>[level+1];
         }
-
-        public int Height { get; set; }
 
         public TKey Key { get; set; }
         public TValue Value { get; set; }

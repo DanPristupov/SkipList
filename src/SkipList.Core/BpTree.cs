@@ -140,7 +140,7 @@
 
             for (var i = 0; i < _level; i++)
             {
-                if (i < node.Height)
+                if (i < node.Neighbour.Length-1)
                 {
                     result[i+1].AppendFormat("*-");
                 }
