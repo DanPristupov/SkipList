@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Text;
 
     public class SkipList<TKey, TValue>// : IDictionary<TKey, TValue>
         where TKey : IComparable<TKey>
@@ -59,19 +61,21 @@
                 node.Value = value;
                 return;
             }
-            
-            var level = _random.Next(0, _level);
-            if (level > _level)
+
+            var newLevel = 0;
+            for (; _random.Next(0, 2) > 0 && newLevel < MaxLevel; newLevel++);
+            if (newLevel > _level)
             {
-                for (var i = _level + 1; i < level; i++)
+                for (var i = _level + 1; i <= newLevel; i++)
                 {
                     updateList[i] = _head;
                 }
-                _level = level;
+                _level = newLevel;
             }
-            node = new SkipListNode<TKey, TValue>(key, value, level);
 
-            for (var i = 0; i <= level; i++)
+            node = new SkipListNode<TKey, TValue>(key, value, newLevel);
+
+            for (var i = 0; i <= newLevel; i++)
             {
 //                node.Neighbour[i] = updateList[i].Neighbour[i];
                 node.Neighbour.Add(updateList[i].Neighbour[i]);
@@ -108,6 +112,51 @@
             {
                 return x.CompareTo(y);
             }
+        }
+
+        public string DebugString
+        {
+            get
+            {
+                var result = new StringBuilder[_level];
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i] = new StringBuilder();
+                }
+
+                var node = _head;
+                var index = 0;
+                node = AppendNode(result, index++, node);
+                while (node != _nil)
+                {
+                    node = AppendNode(result, index++, node);
+                }
+                return string.Join(Environment.NewLine, result.Select(x => x.ToString()));
+            }
+        }
+
+        private SkipListNode<TKey, TValue> AppendNode(StringBuilder[] result, int index, SkipListNode<TKey, TValue> node)
+        {
+            for (var i = 0; i < result.Length; i++)
+            {
+                if (i == 0)
+                {
+                    result[i].AppendFormat("{0}-", node.Key);
+                }
+                else
+                {
+                    if (i < node.Height)
+                    {
+                        result[i].AppendFormat("*-");
+                    }
+                    else
+                    {
+                        result[i].AppendFormat("--");
+                    }
+                }
+            }
+            node = node.Neighbour[0];
+            return node;
         }
     }
 }

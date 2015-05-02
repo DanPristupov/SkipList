@@ -16,6 +16,7 @@
         {
             Key = key;
             Value = value;
+            Height = level;
         }
 
         public int Height { get; set; }
