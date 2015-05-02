@@ -10,7 +10,7 @@
         where TKey : IComparable<TKey>
     {
         private Random _random = new Random();
-        private const int MaxLevel = 4;
+        private const int MaxLevel = 16;
         private readonly Comparer<TKey> _comparer;
 
         public SkipList()
@@ -118,7 +118,7 @@
         {
             get
             {
-                var result = new StringBuilder[_level];
+                var result = new StringBuilder[_level+1];
                 for (int i = 0; i < result.Length; i++)
                 {
                     result[i] = new StringBuilder();
@@ -137,22 +137,17 @@
 
         private SkipListNode<TKey, TValue> AppendNode(StringBuilder[] result, int index, SkipListNode<TKey, TValue> node)
         {
-            for (var i = 0; i < result.Length; i++)
+            result[0].AppendFormat("{0}-", node.Key);
+
+            for (var i = 0; i < _level; i++)
             {
-                if (i == 0)
+                if (i < node.Height)
                 {
-                    result[i].AppendFormat("{0}-", node.Key);
+                    result[i+1].AppendFormat("*-");
                 }
                 else
                 {
-                    if (i < node.Height)
-                    {
-                        result[i].AppendFormat("*-");
-                    }
-                    else
-                    {
-                        result[i].AppendFormat("--");
-                    }
+                    result[i+1].AppendFormat("--");
                 }
             }
             node = node.Neighbour[0];
