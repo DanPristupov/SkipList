@@ -10,7 +10,7 @@
         where TKey : IComparable<TKey>
     {
         private Random _random = new Random();
-        private const int MaxLevel = 16;
+        private const int MaxLevel = 20;
         private readonly Comparer<TKey> _comparer;
 
         public SkipList()

@@ -29,7 +29,7 @@
         [Test]
         public void Performance_Test_1()
         {
-            var n = 50000;
+            var n = 500000;
             var items = GenerateItems(n);
 
             { 
