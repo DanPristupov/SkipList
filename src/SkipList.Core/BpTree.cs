@@ -23,11 +23,11 @@
             Contract.Requires(comparer != null);
             _comparer = comparer;
             _level = 0;
-            _head = new SkipListNode<TKey, TValue>();
+            _head = new SkipListNode<TKey, TValue>(default(TKey), default(TValue), MaxLevel);
             _nil = _head;
             for (var i = 0; i <= MaxLevel; i++)
             {
-                _head.Neighbour.Add(_nil);
+                _head.Neighbour[i] = _nil;
             }
         }
 
@@ -77,8 +77,7 @@
 
             for (var i = 0; i <= newLevel; i++)
             {
-//                node.Neighbour[i] = updateList[i].Neighbour[i];
-                node.Neighbour.Add(updateList[i].Neighbour[i]);
+                node.Neighbour[i] = updateList[i].Neighbour[i];
                 updateList[i].Neighbour[i] = node;
             }
         }
