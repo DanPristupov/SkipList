@@ -45,7 +45,8 @@
 
         private void Insert(TKey key, TValue value)
         {
-            var updateList = new SkipListNode<TKey, TValue>[MaxLevel+1]; // todo: I can use stackalloc here
+            // TODO: May I can use the update list and assign it to new Node.Neightbours directly
+            var updateList = new SkipListNode<TKey, TValue>[MaxLevel+1];
             var node = _head;
             for (var i = _level; i >= 0; i--)
             {
