@@ -20,7 +20,7 @@
         private int _count = 0;
 
         public SkipList()
-            :this(new DefaultComparer())
+            :this(CreateComparer(typeof(TKey)))
         {
         }
 
@@ -34,6 +34,15 @@
             {
                 _head.Forward[i] = _nil;
             }
+        }
+
+        private static Comparer<TKey> CreateComparer(Type keyType)
+        {
+            if (keyType == typeof(int))
+            {
+                return new Int32Comparer() as Comparer<TKey>;
+            }
+            return new DefaultComparer();
         }
 
         public int Count
@@ -205,7 +214,7 @@
         }
         #endregion
 
-        #region DefaultComparer
+        #region DefaultComparers
         private class DefaultComparer : Comparer<TKey>
         {
             public override int Compare(TKey x, TKey y)
@@ -213,6 +222,17 @@
                 return x.CompareTo(y);
             }
         }
+
+        private class Int32Comparer : Comparer<int>
+        {
+            public override int Compare(int x, int y)
+            {
+                if (x > y) return -1;
+                if (x < y) return 1;
+                return 0;
+            }
+        }
+
         #endregion
     }
 }
