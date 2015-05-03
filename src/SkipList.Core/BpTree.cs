@@ -100,7 +100,7 @@
                 updateList[i] = node;
             }
             node = node.Forward[0];
-            if (node != null && _comparer.Compare(node.Key, key) == 0)
+            if (node != _nil && _comparer.Compare(node.Key, key) == 0)
             {
                 node.Value = value;
                 return;
