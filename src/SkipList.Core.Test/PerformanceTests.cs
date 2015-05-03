@@ -20,9 +20,9 @@
             var items = GenerateItems(n);
 
             var testGroup = new TestGroup("Performance_Add_1");
-            var skipList = new SkipList<int, int>();
             var testResultSummary = testGroup.PlanAndExecute("Performance_Add_" + n, () =>
             {
+                var skipList = new SkipList<int, int>();
                 for (var index = 0; index < n; index++)
                 {
                     skipList[items[index]] = items[index];
@@ -30,9 +30,9 @@
             }, 5);
             Console.WriteLine(testResultSummary);
 
-            var dictionary = new SortedDictionary<int, int>();
             var clrResultSummary = testGroup.PlanAndExecute("Performance_Add_CLR" + n, () =>
             {
+                var dictionary = new SortedDictionary<int, int>();
                 for (var index = 0; index < n; index++)
                 {
                     dictionary[items[index]] = items[index];
