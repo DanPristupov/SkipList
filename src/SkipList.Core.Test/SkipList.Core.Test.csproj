@@ -33,6 +33,9 @@
     <Reference Include="nunit.framework">
       <HintPath>..\..\lib\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleSpeedTester">
+      <HintPath>..\..\lib\SimpleSpeedTester.1.1.0\lib\net40\SimpleSpeedTester.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BpTreeTest.cs" />
+    <Compile Include="PerformanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
