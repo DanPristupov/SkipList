@@ -16,6 +16,7 @@
 #if (DEBUG)
             Console.WriteLine("Performance tests should be run only in Release mode!");
 #endif
+            // todo: implement performance test for multiple N
             var n = 500000;
             var items = GenerateItems(n);
 
