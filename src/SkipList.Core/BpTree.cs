@@ -90,14 +90,14 @@
             for (var i = _level; i >= 0; i--)
             {
                 Contract.Assert(_comparer.Compare(node.Key, key) < 0);
-                while (_comparer.Compare(node.Neighbour[i].Key, key) < 0)
+                while (node.Neighbour[i] != _nil && _comparer.Compare(node.Neighbour[i].Key, key) < 0)
                 {
                     node = node.Neighbour[i];
                 }
             }
 
             Contract.Assert(_comparer.Compare(node.Key, key) < 0);
-            Contract.Assert(_comparer.Compare(key, node.Neighbour[0].Key) < 0);
+            Contract.Assert(_comparer.Compare(key, node.Neighbour[0].Key) <= 0);
             node = node.Neighbour[0];
             if (node != null)
             {
