@@ -47,6 +47,9 @@
         [Ignore]
         public void Performance_Test_1()
         {
+#if (DEBUG)
+            Console.WriteLine("Performance tests should be run only in Release mode!");
+#endif
             var n = 500000;
             var items = GenerateItems(n);
 

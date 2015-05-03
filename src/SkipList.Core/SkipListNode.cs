@@ -9,12 +9,12 @@
         {
             Key = key;
             Value = value;
-            Neighbour = new SkipListNode<TKey, TValue>[level+1];
+            Forward = new SkipListNode<TKey, TValue>[level+1];
         }
 
-        public TKey Key { get; set; }
+        public TKey Key { get; private set; }
         public TValue Value { get; set; }
 
-        public SkipListNode<TKey, TValue>[] Neighbour { get; set; }
+        public SkipListNode<TKey, TValue>[] Forward { get; private set; }
     }
 }

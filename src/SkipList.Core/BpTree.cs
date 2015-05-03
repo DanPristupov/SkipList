@@ -9,9 +9,14 @@
     public class SkipList<TKey, TValue>// : IDictionary<TKey, TValue>
         where TKey : IComparable<TKey>
     {
-        private Random _random = new Random();
         private const int MaxLevel = 20;
+
+        private readonly Random _random = new Random();
         private readonly Comparer<TKey> _comparer;
+        private readonly SkipListNode<TKey, TValue> _head;
+        private readonly SkipListNode<TKey, TValue> _nil;
+        
+        private int _level;
 
         public SkipList()
             :this(new DefaultComparer())
@@ -27,14 +32,10 @@
             _nil = _head;
             for (var i = 0; i <= MaxLevel; i++)
             {
-                _head.Neighbour[i] = _nil;
+                _head.Forward[i] = _nil;
             }
         }
 
-        private SkipListNode<TKey, TValue> _head;
-        private SkipListNode<TKey, TValue> _nil;
-
-        private int _level;
 
 
         public TValue this[TKey key]
@@ -50,13 +51,13 @@
             var node = _head;
             for (var i = _level; i >= 0; i--)
             {
-                while (node.Neighbour[i] != _nil && _comparer.Compare(node.Neighbour[i].Key, key) < 0)
+                while (node.Forward[i] != _nil && _comparer.Compare(node.Forward[i].Key, key) < 0)
                 {
-                    node = node.Neighbour[i];
+                    node = node.Forward[i];
                 }
                 updateList[i] = node;
             }
-            node = node.Neighbour[0];
+            node = node.Forward[0];
             if (node != null && _comparer.Compare(node.Key, key) == 0)
             {
                 node.Value = value;
@@ -78,8 +79,8 @@
 
             for (var i = 0; i <= newLevel; i++)
             {
-                node.Neighbour[i] = updateList[i].Neighbour[i];
-                updateList[i].Neighbour[i] = node;
+                node.Forward[i] = updateList[i].Forward[i];
+                updateList[i].Forward[i] = node;
             }
         }
 
@@ -90,15 +91,15 @@
             for (var i = _level; i >= 0; i--)
             {
                 Contract.Assert(_comparer.Compare(node.Key, key) < 0);
-                while (node.Neighbour[i] != _nil && _comparer.Compare(node.Neighbour[i].Key, key) < 0)
+                while (node.Forward[i] != _nil && _comparer.Compare(node.Forward[i].Key, key) < 0)
                 {
-                    node = node.Neighbour[i];
+                    node = node.Forward[i];
                 }
             }
 
             Contract.Assert(_comparer.Compare(node.Key, key) < 0);
-            Contract.Assert(_comparer.Compare(key, node.Neighbour[0].Key) <= 0);
-            node = node.Neighbour[0];
+            Contract.Assert(_comparer.Compare(key, node.Forward[0].Key) <= 0);
+            node = node.Forward[0];
             if (node != null)
             {
                 return node.Value;
@@ -106,14 +107,7 @@
             throw new KeyNotFoundException();
         }
 
-        private class DefaultComparer : Comparer<TKey>
-        {
-            public override int Compare(TKey x, TKey y)
-            {
-                return x.CompareTo(y);
-            }
-        }
-
+        #region DebugString
         public string DebugString
         {
             get
@@ -125,23 +119,22 @@
                 }
 
                 var node = _head;
-                var index = 0;
-                node = AppendNode(result, index++, node);
+                node = AppendNode(result, node);
                 while (node != _nil)
                 {
-                    node = AppendNode(result, index++, node);
+                    node = AppendNode(result, node);
                 }
                 return string.Join(Environment.NewLine, result.Select(x => x.ToString()));
             }
         }
 
-        private SkipListNode<TKey, TValue> AppendNode(StringBuilder[] result, int index, SkipListNode<TKey, TValue> node)
+        private SkipListNode<TKey, TValue> AppendNode(StringBuilder[] result, SkipListNode<TKey, TValue> node)
         {
             result[0].AppendFormat("{0}-", node.Key);
 
             for (var i = 0; i < _level; i++)
             {
-                if (i < node.Neighbour.Length-1)
+                if (i < node.Forward.Length-1)
                 {
                     result[i+1].AppendFormat("*-");
                 }
@@ -150,8 +143,19 @@
                     result[i+1].AppendFormat("--");
                 }
             }
-            node = node.Neighbour[0];
+            node = node.Forward[0];
             return node;
         }
+        #endregion
+
+        #region DefaultComparer
+        private class DefaultComparer : Comparer<TKey>
+        {
+            public override int Compare(TKey x, TKey y)
+            {
+                return x.CompareTo(y);
+            }
+        }
+        #endregion
     }
 }
