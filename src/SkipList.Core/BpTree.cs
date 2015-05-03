@@ -70,13 +70,14 @@
             }
 
             Contract.Assert(_comparer.Compare(node.Key, key) < 0);
-            Contract.Assert(_comparer.Compare(key, node.Forward[0].Key) <= 0);
+            Contract.Assert(node.Forward[0] == _nil || _comparer.Compare(key, node.Forward[0].Key) <= 0);
             node = node.Forward[0];
-            if (node == null)
+
+            if (node != _nil && _comparer.Compare(node.Key, key) == 0)
             {
-                return null;
+                return node;
             }
-            return node;
+            return null;
         }
 
 
