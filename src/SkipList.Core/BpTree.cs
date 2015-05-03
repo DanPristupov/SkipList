@@ -36,13 +36,49 @@
             }
         }
 
-
-
         public TValue this[TKey key]
         {
-            get { return Search(key); }
+            get
+            {
+                var node = Search(key);
+                if (node == null)
+                {
+                    throw new KeyNotFoundException();
+                }
+                return node.Value;
+            }
             set { Insert(key, value); }
         }
+
+        public bool ContainsKey(TKey key)
+        {
+            var result = Search(key);
+            return result != null;
+        }
+
+        private SkipListNode<TKey, TValue> Search(TKey key)
+        {
+            var node = _head;
+
+            for (var i = _level; i >= 0; i--)
+            {
+                Contract.Assert(_comparer.Compare(node.Key, key) < 0);
+                while (node.Forward[i] != _nil && _comparer.Compare(node.Forward[i].Key, key) < 0)
+                {
+                    node = node.Forward[i];
+                }
+            }
+
+            Contract.Assert(_comparer.Compare(node.Key, key) < 0);
+            Contract.Assert(_comparer.Compare(key, node.Forward[0].Key) <= 0);
+            node = node.Forward[0];
+            if (node == null)
+            {
+                return null;
+            }
+            return node;
+        }
+
 
         private void Insert(TKey key, TValue value)
         {
@@ -84,28 +120,7 @@
             }
         }
 
-        private TValue Search(TKey key)
-        {
-            var node = _head;
 
-            for (var i = _level; i >= 0; i--)
-            {
-                Contract.Assert(_comparer.Compare(node.Key, key) < 0);
-                while (node.Forward[i] != _nil && _comparer.Compare(node.Forward[i].Key, key) < 0)
-                {
-                    node = node.Forward[i];
-                }
-            }
-
-            Contract.Assert(_comparer.Compare(node.Key, key) < 0);
-            Contract.Assert(_comparer.Compare(key, node.Forward[0].Key) <= 0);
-            node = node.Forward[0];
-            if (node != null)
-            {
-                return node.Value;
-            }
-            throw new KeyNotFoundException();
-        }
 
         #region DebugString
         public string DebugString
