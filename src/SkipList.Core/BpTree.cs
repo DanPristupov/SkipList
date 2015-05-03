@@ -152,7 +152,7 @@
             node = node.Forward[0];
             // /X
 
-            if (node == null || _comparer.Compare(node.Key, key) != 0)
+            if (node == _nil || _comparer.Compare(node.Key, key) != 0)
             {
                 return false;
             }
