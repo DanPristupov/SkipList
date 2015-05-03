@@ -16,7 +16,8 @@
         private readonly SkipListNode<TKey, TValue> _head;
         private readonly SkipListNode<TKey, TValue> _nil;
         
-        private int _level;
+        private int _level = 0;
+        private int _count = 0;
 
         public SkipList()
             :this(new DefaultComparer())
@@ -27,13 +28,17 @@
         {
             Contract.Requires(comparer != null);
             _comparer = comparer;
-            _level = 0;
             _head = new SkipListNode<TKey, TValue>(default(TKey), default(TValue), MaxLevel);
             _nil = _head;
             for (var i = 0; i <= MaxLevel; i++)
             {
                 _head.Forward[i] = _nil;
             }
+        }
+
+        public int Count
+        {
+            get { return _count; }
         }
 
         public TValue this[TKey key]
@@ -119,6 +124,7 @@
                 node.Forward[i] = updateList[i].Forward[i];
                 updateList[i].Forward[i] = node;
             }
+            _count++;
         }
 
         public bool Remove(TKey key)
@@ -154,6 +160,7 @@
             {
                 _level--;
             }
+            _count--;
             return true;
         }
 

@@ -32,10 +32,12 @@
         public void Insert_Test_1(int[] values)
         {
             var skipList = new SkipList<int, int>();
+            var count = 1;
             foreach (var value in values)
             {
                 skipList[value] = value;
                 Assert.AreEqual(value, skipList[value]);
+                Assert.AreEqual(count++, skipList.Count);
             }
             foreach (var value in values)
             {
@@ -61,6 +63,21 @@
             }
         }
 
+        [TestCase(1, new[] {1 })]
+        [TestCase(2, new[] {1, 2 })]
+        [TestCase(3, new[] {1, 2, 3 })]
+        [TestCase(4, new[] {1, 2, 3, 4 })]
+        [TestCase(4, new[] {1, 2, 3, 4, 1 })]
+        public void Count_AfterAdd(int expectedCount, int[] keys)
+        {
+            var skipList = new SkipList<int, int>();
+            foreach (var key in keys)
+            {
+                skipList[key] = key;
+            }
+            Assert.AreEqual(expectedCount, skipList.Count);
+        }
+
         [TestCase(new[] {15})]
         [TestCase(new[] {15,10})]
         [TestCase(new[] {15,10,25,20,30,5 })]
@@ -73,19 +90,20 @@
             {
                 skipList[value] = value;
             }
-
+            var count = values.Length;
+            Assert.AreEqual(count--, skipList.Count);
             foreach (var value in values)
             {
                 var removedFlag = skipList.Remove(value);
                 Assert.IsTrue(removedFlag);
-
                 Assert.IsFalse(skipList.ContainsKey(value));
+                Assert.AreEqual(count--, skipList.Count);
             }
         }
 
         [Test]
         [Ignore]
-        public void Performance_Test_1()
+        public void Performance_Add_1()
         {
 #if (DEBUG)
             Console.WriteLine("Performance tests should be run only in Release mode!");
