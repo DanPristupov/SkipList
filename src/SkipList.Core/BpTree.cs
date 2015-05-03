@@ -121,7 +121,41 @@
             }
         }
 
+        public bool Remove(TKey key)
+        {
+            // X This block of code can be extracted as method
+            var updateList = new SkipListNode<TKey, TValue>[MaxLevel + 1];
+            var node = _head;
+            for (var i = _level; i >= 0; i--)
+            {
+                while (node.Forward[i] != _nil && _comparer.Compare(node.Forward[i].Key, key) < 0)
+                {
+                    node = node.Forward[i];
+                }
+                updateList[i] = node;
+            }
+            node = node.Forward[0];
+            // /X
 
+            if (node == null || _comparer.Compare(node.Key, key) != 0)
+            {
+                return false;
+            }
+
+            for (var i = 0; i <= _level; i++)
+            {
+                if (updateList[i].Forward[i] != node)
+                {
+                    break;
+                }
+                updateList[i].Forward[i] = node.Forward[i];
+            }
+            while (_level > 0 && _head.Forward[_level] == _nil)
+            {
+                _level--;
+            }
+            return true;
+        }
 
         #region DebugString
         public string DebugString

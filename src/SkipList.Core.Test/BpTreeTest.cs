@@ -61,6 +61,28 @@
             }
         }
 
+        [TestCase(new[] {15})]
+        [TestCase(new[] {15,10})]
+        [TestCase(new[] {15,10,25,20,30,5 })]
+        [TestCase(new[] {10,20,30,40,50,60 })]
+        [TestCase(new[] {60,50,40,30,20,10 })]
+        public void Remove_Test_1(int[] values)
+        {
+            var skipList = new SkipList<int, int>();
+            foreach (var value in values)
+            {
+                skipList[value] = value;
+            }
+
+            foreach (var value in values)
+            {
+                var removedFlag = skipList.Remove(value);
+                Assert.IsTrue(removedFlag);
+
+                Assert.IsFalse(skipList.ContainsKey(value));
+            }
+        }
+
         [Test]
         [Ignore]
         public void Performance_Test_1()
