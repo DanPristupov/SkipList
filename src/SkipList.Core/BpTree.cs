@@ -40,7 +40,7 @@
         {
             if (keyType == typeof(int))
             {
-                return new Int32Comparer() as Comparer<TKey>;
+                return Comparer<int>.Default as Comparer<TKey>;
             }
             return new DefaultComparer();
         }
@@ -220,16 +220,6 @@
             public override int Compare(TKey x, TKey y)
             {
                 return x.CompareTo(y);
-            }
-        }
-
-        private class Int32Comparer : Comparer<int>
-        {
-            public override int Compare(int x, int y)
-            {
-                if (x > y) return -1;
-                if (x < y) return 1;
-                return 0;
             }
         }
 
