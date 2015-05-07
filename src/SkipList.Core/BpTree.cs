@@ -77,9 +77,19 @@
             for (var i = _level; i >= 0; i--)
             {
 //                Contract.Assert(_comparer.Compare(node.Key, key) < 0);
-                while (node.Forward[i] != _nil && _comparer.Compare(node.Forward[i].Key, key) < 0)
+                while (node.Forward[i] != _nil)
                 {
+                    var cmpResult = _comparer.Compare(node.Forward[i].Key, key);
+                    if (cmpResult > 0)
+                    {
+                        break;
+                    }
                     node = node.Forward[i];
+                    if (cmpResult == 0)
+                    {
+                        return node;
+                    }
+
                 }
             }
 
