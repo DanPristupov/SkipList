@@ -184,6 +184,30 @@
         }
 
         #region DebugString
+        public string LevelStats
+        {
+            get
+            {
+                var levels = new Dictionary<int, int>();
+                var result = new StringBuilder[_level+1];
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i] = new StringBuilder();
+                }
+
+                var node = _head;
+                node = LevelStatsHandleNode(levels, node);
+                while (node != _nil)
+                {
+                    node = LevelStatsHandleNode(levels, node);
+                }
+                var output = levels
+                    .OrderBy(x => x.Key)
+                    .Select(x => string.Format("{0}: {1}", x.Key, x.Value));
+                return string.Join(Environment.NewLine, output);
+            }
+        }
+
         public string DebugString
         {
             get
@@ -219,6 +243,21 @@
                     result[i+1].AppendFormat("--");
                 }
             }
+            node = node.Forward[0];
+            return node;
+        }
+
+        private SkipListNode<TKey, TValue> LevelStatsHandleNode(Dictionary<int, int> levels, SkipListNode<TKey, TValue> node)
+        {
+            if (!levels.ContainsKey(node.Forward.Length))
+            {
+                levels[node.Forward.Length] = 1;
+            }
+            else
+            {
+                levels[node.Forward.Length]++;
+            }
+
             node = node.Forward[0];
             return node;
         }
