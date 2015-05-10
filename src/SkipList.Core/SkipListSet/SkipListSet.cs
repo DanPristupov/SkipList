@@ -171,7 +171,7 @@
 
             for (var i = _level; i >= 0; i--)
             {
-                //                Contract.Assert(_comparer.Compare(node.Key, key) < 0);
+//                Contract.Assert(_comparer.Compare(node.Key, key) < 0);
                 while (node.Forward[i] != _nil)
                 {
                     var cmpResult = _comparer.Compare(node.Forward[i].Key, key);
@@ -179,16 +179,15 @@
                     {
                         break;
                     }
-                    node = node.Forward[i];
                     if (cmpResult == 0)
                     {
-                        return node;
+                        return node.Forward[i];
                     }
-
+                    node = node.Forward[i];
                 }
             }
 
-            //            Contract.Assert(_comparer.Compare(node.Key, key) < 0);
+//            Contract.Assert(_comparer.Compare(node.Key, key) < 0);
             Debug.Assert(node.Forward[0] == _nil || _comparer.Compare(key, node.Forward[0].Key) <= 0);
             node = node.Forward[0];
 
