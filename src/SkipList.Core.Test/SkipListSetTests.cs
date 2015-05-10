@@ -1,28 +1,24 @@
 ﻿namespace BpTree.Core.Test
 {
     using System;
+    using System.Collections.Generic;
     using NUnit.Framework;
     using SkipList.Core;
 
     [TestFixture]
-    public class BpTreeTest
+    public class SkipListSetTests
     {
         [Test]
         public void General_Test_1()
         {
-            var skipList = new SkipListDictionary<int, int>();
-            skipList[15] = 15;
-//            Console.WriteLine(skipList.DebugString);
-            skipList[10] = 10;
-//            Console.WriteLine(skipList.DebugString);
-            skipList[25] = 25;
-//            Console.WriteLine(skipList.DebugString);
-            skipList[20] = 20;
-//            Console.WriteLine(skipList.DebugString);
-            skipList[30] = 30;
-//            Console.WriteLine(skipList.DebugString);
-            skipList[5] = 5;
-//            Console.WriteLine(skipList.DebugString);
+            var skipList = new SkipListSet<int>(Comparer<int>.Default);
+            skipList.Add(15);
+            skipList.Add(10);
+            skipList.Add(25);
+            skipList.Add(20);
+            skipList.Add(30);
+            skipList.Add(5);
+            Console.WriteLine(skipList.DebugString);
         }
 
         [TestCase(new[] {15,10,25,20,30,5 })]
@@ -30,17 +26,18 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Insert_Test_1(int[] values)
         {
-            var skipList = new SkipListDictionary<int, int>();
+            var skipList = new SkipListSet<int>(Comparer<int>.Default);
             var count = 1;
             foreach (var value in values)
             {
-                skipList[value] = value;
-                Assert.AreEqual(value, skipList[value]);
+                Assert.IsFalse(skipList.Contains(value));
+                skipList.Add(value);
+                Assert.IsTrue(skipList.Contains(value));
                 Assert.AreEqual(count++, skipList.Count);
             }
             foreach (var value in values)
             {
-                Assert.AreEqual(value, skipList[value]);
+                Assert.IsTrue(skipList.Contains(value));
             }
         }
 
@@ -49,16 +46,17 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Contains_AfterAdd(int[] keys)
         {
-            var skipList = new SkipListDictionary<int, int>();
+            var skipList = new SkipListSet<int>(Comparer<int>.Default);
             foreach (var key in keys)
             {
-                skipList[key] = key;
-                Assert.IsTrue(skipList.ContainsKey(key));
+                Assert.IsFalse(skipList.Contains(key));
+                skipList.Add(key);
+                Assert.IsTrue(skipList.Contains(key));
             }
 
             foreach (var key in keys)
             {
-                Assert.IsTrue(skipList.ContainsKey(key));
+                Assert.IsTrue(skipList.Contains(key));
             }
         }
 
@@ -69,10 +67,10 @@
         [TestCase(4, new[] {1, 2, 3, 4, 1 })]
         public void Count_AfterAdd(int expectedCount, int[] keys)
         {
-            var skipList = new SkipListDictionary<int, int>();
+            var skipList = new SkipListSet<int>(Comparer<int>.Default);
             foreach (var key in keys)
             {
-                skipList[key] = key;
+                skipList.Add(key);
             }
             Assert.AreEqual(expectedCount, skipList.Count);
         }
@@ -84,10 +82,10 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Remove_Test_1(int[] values)
         {
-            var skipList = new SkipListDictionary<int, int>();
+            var skipList = new SkipListSet<int>(Comparer<int>.Default);
             foreach (var value in values)
             {
-                skipList[value] = value;
+                skipList.Add(value);
             }
             var count = values.Length;
             Assert.AreEqual(count--, skipList.Count);
@@ -95,7 +93,7 @@
             {
                 var removedFlag = skipList.Remove(value);
                 Assert.IsTrue(removedFlag);
-                Assert.IsFalse(skipList.ContainsKey(value));
+                Assert.IsFalse(skipList.Contains(value));
                 Assert.AreEqual(count--, skipList.Count);
             }
         }

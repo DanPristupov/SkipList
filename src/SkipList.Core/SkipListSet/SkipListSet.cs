@@ -4,6 +4,8 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
     using BpTree.Core;
 
     public class SkipListSet<T> : ISet<T>
@@ -106,7 +108,7 @@
 
         public bool Contains(T item)
         {
-            throw new System.NotImplementedException();
+            return Search(item) != null;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -237,6 +239,96 @@
             }
             _count++;
         }
+
+        #region DebugString
+        public string LevelStats
+        {
+            get
+            {
+                var levels = new Dictionary<int, int>();
+                var result = new StringBuilder[_level + 1];
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i] = new StringBuilder();
+                }
+
+                var node = _head;
+                node = LevelStatsHandleNode(levels, node);
+                while (node != _nil)
+                {
+                    node = LevelStatsHandleNode(levels, node);
+                }
+                var output = levels
+                    .OrderBy(x => x.Key)
+                    .Select(x => string.Format("{0}: {1}", x.Key, x.Value));
+                return string.Join(Environment.NewLine, output);
+            }
+        }
+
+        public string DebugString
+        {
+            get
+            {
+                var result = new StringBuilder[_level + 1];
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i] = new StringBuilder();
+                }
+
+                var node = _head;
+                node = AppendNode(result, node);
+                while (node != _nil)
+                {
+                    node = AppendNode(result, node);
+                }
+                return string.Join(Environment.NewLine, result.Select(x => x.ToString()));
+            }
+        }
+
+        private SkipListSetNode<T> AppendNode(StringBuilder[] result, SkipListSetNode<T> node)
+        {
+            result[0].Append(node.Key.ToString().PadRight(4));
+
+            var neighbour = node.Forward[0];
+            for (var i = 0; i < _level; i++)
+            {
+                if (i < node.Forward.Length)
+                {
+                    result[i + 1].AppendFormat("|--");
+                }
+                else
+                {
+                    result[i + 1].AppendFormat("---");
+                }
+
+                if (i < node.Forward.Length && node.Forward[i] == neighbour)
+                {
+                    result[i + 1].AppendFormat(">");
+                }
+                else
+                {
+                    result[i + 1].AppendFormat("-");
+                }
+            }
+            node = node.Forward[0];
+            return node;
+        }
+
+        private SkipListSetNode<T> LevelStatsHandleNode(Dictionary<int, int> levels, SkipListSetNode<T> node)
+        {
+            if (!levels.ContainsKey(node.Forward.Length))
+            {
+                levels[node.Forward.Length] = 1;
+            }
+            else
+            {
+                levels[node.Forward.Length]++;
+            }
+
+            node = node.Forward[0];
+            return node;
+        }
+        #endregion
 
     }
 }
