@@ -1,4 +1,4 @@
-﻿namespace BpTree.Core.Test
+﻿namespace SkipList.Core.Test
 {
     using System;
     using System.Collections.Generic;

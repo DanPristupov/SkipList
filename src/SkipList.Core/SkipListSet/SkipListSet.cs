@@ -6,7 +6,6 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using BpTree.Core;
 
     public class SkipListSet<T> : ISet<T>
     {

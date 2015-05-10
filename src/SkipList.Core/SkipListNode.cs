@@ -1,7 +1,8 @@
-﻿namespace BpTree.Core
+﻿namespace SkipList.Core
 {
     using System;
 
+    [Obsolete]
     internal class SkipListNode<TKey, TValue>
         where TKey : IComparable<TKey>
     {

@@ -1,4 +1,4 @@
-﻿namespace BpTree.Core
+﻿namespace SkipList.Core
 {
     using System;
     using System.Collections.Generic;
@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Text;
 
+    [Obsolete]
     public class SkipList<TKey, TValue>// : IDictionary<TKey, TValue>
         where TKey : IComparable<TKey>
     {

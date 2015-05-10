@@ -1,4 +1,4 @@
-﻿namespace BpTree.Core
+﻿namespace SkipList.Core
 {
     internal class SkipListSetNode<T>
     {
