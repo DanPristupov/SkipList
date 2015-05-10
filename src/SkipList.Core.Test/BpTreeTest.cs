@@ -2,6 +2,7 @@
 {
     using System;
     using NUnit.Framework;
+    using SkipList.Core;
 
     [TestFixture]
     public class BpTreeTest
@@ -9,7 +10,7 @@
         [Test]
         public void General_Test_1()
         {
-            var skipList = new SkipList<int, int>();
+            var skipList = new SkipListDictionary<int, int>();
             skipList[15] = 15;
 //            Console.WriteLine(skipList.DebugString);
             skipList[10] = 10;
@@ -21,7 +22,7 @@
             skipList[30] = 30;
 //            Console.WriteLine(skipList.DebugString);
             skipList[5] = 5;
-            Console.WriteLine(skipList.DebugString);
+//            Console.WriteLine(skipList.DebugString);
         }
 
         [TestCase(new[] {15,10,25,20,30,5 })]
@@ -29,7 +30,7 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Insert_Test_1(int[] values)
         {
-            var skipList = new SkipList<int, int>();
+            var skipList = new SkipListDictionary<int, int>();
             var count = 1;
             foreach (var value in values)
             {
@@ -48,7 +49,7 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Contains_AfterAdd(int[] keys)
         {
-            var skipList = new SkipList<int, int>();
+            var skipList = new SkipListDictionary<int, int>();
             foreach (var key in keys)
             {
                 skipList[key] = key;
@@ -68,7 +69,7 @@
         [TestCase(4, new[] {1, 2, 3, 4, 1 })]
         public void Count_AfterAdd(int expectedCount, int[] keys)
         {
-            var skipList = new SkipList<int, int>();
+            var skipList = new SkipListDictionary<int, int>();
             foreach (var key in keys)
             {
                 skipList[key] = key;
@@ -83,7 +84,7 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Remove_Test_1(int[] values)
         {
-            var skipList = new SkipList<int, int>();
+            var skipList = new SkipListDictionary<int, int>();
             foreach (var value in values)
             {
                 skipList[value] = value;

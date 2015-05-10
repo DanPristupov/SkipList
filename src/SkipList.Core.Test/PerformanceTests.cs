@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using BpTree.Core;
     using NUnit.Framework;
     using SimpleSpeedTester.Core;
 
@@ -24,7 +23,7 @@
             var testGroup = new TestGroup("Performance_Search_1");
 
             {
-                var skipList = new SkipList<int, int>();
+                var skipList = new SkipListDictionary<int, int>();
                 for (var index = 0; index < n; index++)
                 {
                     skipList[items[index]] = items[index];
@@ -72,7 +71,7 @@
             var testGroup = new TestGroup("Performance_Add_1");
             var testResultSummary = testGroup.PlanAndExecute("Performance_Add_" + n, () =>
             {
-                var skipList = new SkipList<int, int>();
+                var skipList = new SkipListDictionary<int, int>();
                 for (var index = 0; index < n; index++)
                 {
                     skipList[items[index]] = items[index];
