@@ -98,6 +98,30 @@
             }
         }
 
+        [TestCase(new[] {15,10,25,20,30,5 })]
+        [TestCase(new[] {10,20,30,40,50,60 })]
+        [TestCase(new[] {60,50,40,30,20,10 })]
+        public void Enumerator_Test(int[] values)
+        {
+            var skipList = new SkipListSet<int>(Comparer<int>.Default);
+            var addedItem = new SortedSet<int>();
+            foreach (var value in values)
+            {
+                addedItem.Add(value);
+                skipList.Add(value);
+
+                CollectionAssert.AreEqual(addedItem, skipList);
+            }
+
+            foreach (var value in values)
+            {
+                addedItem.Remove(value);
+                skipList.Remove(value);
+
+                CollectionAssert.AreEqual(addedItem, skipList);
+            }
+        }
+
 
     }
 }

@@ -155,9 +155,22 @@
         public int Count { get { return _count; } }
         public bool IsReadOnly { get { return false; } }
 
+        private IEnumerable<T> Items
+        {
+            get
+            {
+                var node = _head.Forward[0];
+                while (node != _nil)
+                {
+                    yield return node.Key;
+                    node = node.Forward[0];
+                }
+            }
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
-            throw new System.NotImplementedException();
+            return Items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
