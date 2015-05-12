@@ -71,7 +71,7 @@
 
         public void Add(TKey key, TValue value)
         {
-            throw new System.NotImplementedException();
+            _set.Add(new KeyValuePair<TKey, TValue>(key, value));
         }
 
         public bool Remove(TKey key)
