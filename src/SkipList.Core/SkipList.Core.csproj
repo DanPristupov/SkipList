@@ -87,8 +87,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SkipListDictionary.cs" />
     <Compile Include="SkipListNode.cs" />
-    <Compile Include="SkipListSet\SkipListSet.cs" />
+    <Compile Include="SkipListSet\SkipListCollection.cs" />
     <Compile Include="SkipListSet\SkipListSetNode.cs" />
+    <Compile Include="SkipListSet\ThrowHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

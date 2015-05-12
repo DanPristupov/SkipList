@@ -6,7 +6,7 @@
 
     public class SkipListDictionary<TKey, TValue>:IDictionary<TKey, TValue>
     {
-        private SkipListSet<KeyValuePair<TKey, TValue>> _set;
+        private SkipListCollection<KeyValuePair<TKey, TValue>> _set;
 
         public SkipListDictionary()
             :this(Comparer<TKey>.Default)
@@ -15,7 +15,7 @@
 
         public SkipListDictionary(IComparer<TKey> comparer)
         {
-            _set = new SkipListSet<KeyValuePair<TKey, TValue>>(new KeyValuePairComparer(comparer));
+            _set = new SkipListCollection<KeyValuePair<TKey, TValue>>(new KeyValuePairComparer(comparer));
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

@@ -11,7 +11,7 @@
         [Test]
         public void General_Test_1()
         {
-            var skipList = new SkipListSet<int>(Comparer<int>.Default);
+            var skipList = new SkipListCollection<int>(Comparer<int>.Default);
             skipList.Add(15);
             skipList.Add(10);
             skipList.Add(25);
@@ -26,7 +26,7 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Insert_Test_1(int[] values)
         {
-            var skipList = new SkipListSet<int>(Comparer<int>.Default);
+            var skipList = new SkipListCollection<int>(Comparer<int>.Default);
             var count = 1;
             foreach (var value in values)
             {
@@ -46,7 +46,7 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Contains_AfterAdd(int[] keys)
         {
-            var skipList = new SkipListSet<int>(Comparer<int>.Default);
+            var skipList = new SkipListCollection<int>(Comparer<int>.Default);
             foreach (var key in keys)
             {
                 Assert.IsFalse(skipList.Contains(key));
@@ -67,7 +67,7 @@
         [TestCase(4, new[] {1, 2, 3, 4, 1 })]
         public void Count_AfterAdd(int expectedCount, int[] keys)
         {
-            var skipList = new SkipListSet<int>(Comparer<int>.Default);
+            var skipList = new SkipListCollection<int>(Comparer<int>.Default);
             foreach (var key in keys)
             {
                 skipList.Add(key);
@@ -82,7 +82,7 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Remove_Test_1(int[] values)
         {
-            var skipList = new SkipListSet<int>(Comparer<int>.Default);
+            var skipList = new SkipListCollection<int>(Comparer<int>.Default);
             foreach (var value in values)
             {
                 skipList.Add(value);
@@ -103,7 +103,7 @@
         [TestCase(new[] {60,50,40,30,20,10 })]
         public void Enumerator_Test(int[] values)
         {
-            var skipList = new SkipListSet<int>(Comparer<int>.Default);
+            var skipList = new SkipListCollection<int>(Comparer<int>.Default);
             var addedItem = new SortedSet<int>();
             foreach (var value in values)
             {
@@ -119,6 +119,21 @@
                 skipList.Remove(value);
 
                 CollectionAssert.AreEqual(addedItem, skipList);
+            }
+        }
+
+        [TestCase(new[] { 60, 50, 40, 30, 20, 10 }, ExpectedException = typeof(InvalidOperationException))]
+        public void Enumerator_ThrowsOnEnumFailedVersion(int[] values)
+        {
+            var skipList = new SkipListCollection<int>(Comparer<int>.Default);
+            foreach (var value in values)
+            {
+                skipList.Add(value);
+            }
+
+            foreach (var value in skipList)
+            {
+                skipList.Remove(value);
             }
         }
 

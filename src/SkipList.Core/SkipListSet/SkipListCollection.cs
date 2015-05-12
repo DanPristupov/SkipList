@@ -7,7 +7,7 @@
     using System.Linq;
     using System.Text;
 
-    public class SkipListSet<T> : ISet<T>
+    public class SkipListCollection<T> : ICollection<T>
     {
         private const int MaxLevel = 20;
 
@@ -16,16 +16,18 @@
         private readonly SkipListSetNode<T> _head;
         private readonly SkipListSetNode<T> _nil;
 
+        private int _version = 0;
         private int _level = 0;
         private int _count = 0;
 
-        public SkipListSet(Comparer<T> comparer)
+        public SkipListCollection(Comparer<T> comparer)
         {
             Debug.Assert(comparer != null);
             _comparer = comparer;
             _random = new Random();
             _head = new SkipListSetNode<T>(default(T), MaxLevel);
             _nil = _head;
+            _version = 0;
 
             for (var i = 0; i <= MaxLevel; i++)
             {
@@ -43,62 +45,6 @@
         {
             Insert(item);
         }
-
-        bool ISet<T>.Add(T item)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void UnionWith(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void IntersectWith(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void ExceptWith(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void SymmetricExceptWith(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool IsSubsetOf(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool IsSupersetOf(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool IsProperSupersetOf(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool IsProperSubsetOf(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool Overlaps(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool SetEquals(IEnumerable<T> other)
-        {
-            throw new System.NotImplementedException();
-        }
-
 
         public void Clear()
         {
@@ -149,19 +95,26 @@
                 _level--;
             }
             _count--;
+            _version++;
             return true;
         }
 
         public int Count { get { return _count; } }
+
         public bool IsReadOnly { get { return false; } }
 
         private IEnumerable<T> Items
         {
             get
             {
+                var version = _version;
                 var node = _head.Forward[0];
                 while (node != _nil)
                 {
+                    if (version != _version)
+                    {
+                        ThrowHelper.ThrowInvalidOperationException_EnumFailedVersion();
+                    }
                     yield return node.Key;
                     node = node.Forward[0];
                 }
@@ -249,6 +202,7 @@
                 updateList[i].Forward[i] = node;
             }
             _count++;
+            _version++;
         }
 
         #region DebugString
