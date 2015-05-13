@@ -77,31 +77,37 @@
 #if (DEBUG)
             Console.WriteLine("Performance tests should be run only in Release mode!");
 #endif
-            // todo: implement performance test for multiple N
-            var n = 500000;
-            var items = GenerateItems(n);
+            var numberOfItemsList = new[] {1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000};
+            var result = CreateResultDictionary();
 
-            var testGroup = new TestGroup("Performance_Add_1");
-            var testResultSummary = testGroup.PlanAndExecute("Performance_Add_" + n, () =>
+            foreach (var n in numberOfItemsList)
             {
-                var skipList = new SkipListDictionary<int, int>();
-                for (var index = 0; index < n; index++)
-                {
-                    skipList[items[index]] = items[index];
-                }
-            }, 5);
-            Console.WriteLine(testResultSummary);
+                result[Iterations].Add(n.ToString());
+                var items = GenerateItems(n);
 
-            var clrResultSummary = testGroup.PlanAndExecute("Performance_Add_CLR" + n, () =>
-            {
-                var dictionary = new SortedDictionary<int, int>();
-                for (var index = 0; index < n; index++)
+                var testGroup = new TestGroup("Performance_Add_1");
+                var testResultSummary = testGroup.PlanAndExecute("Performance_Add_" + n, () =>
                 {
-                    dictionary[items[index]] = items[index];
-                }
-            }, 5);
+                    var skipList = new SkipListDictionary<int, int>();
+                    for (var i = 0; i < n; i++)
+                    {
+                        skipList[items[i]] = items[i];
+                    }
+                }, 5);
+                result[SkipList].Add(testResultSummary.AverageExecutionTime.ToString("F1"));
 
-            Console.WriteLine(clrResultSummary);
+                var clrResultSummary = testGroup.PlanAndExecute("Performance_Add_CLR" + n, () =>
+                {
+                    var dictionary = new SortedDictionary<int, int>();
+                    for (var i = 0; i < n; i++)
+                    {
+                        dictionary[items[i]] = items[i];
+                    }
+                }, 5);
+
+                result[CsrDictionary].Add(clrResultSummary.AverageExecutionTime.ToString("F1"));
+            }
+            PrintResult(result, "Add");
         }
 
         private static int[] GenerateItems(int n)
